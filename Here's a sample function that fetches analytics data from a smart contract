@@ -1,0 +1,43 @@
+const Web3 = require('web3');
+
+async function fetchDAppAnalytics(contractAddress, abi, providerUrl) {
+    // Initialize web3 provider
+    const web3 = new Web3(new Web3.providers.HttpProvider(providerUrl));
+
+    // Create contract instance
+    const contract = new web3.eth.Contract(abi, contractAddress);
+
+    try {
+        // Fetch total users (assuming there’s a method in the contract for this)
+        const totalUsers = await contract.methods.getTotalUsers().call();
+
+        // Fetch total transactions (again, assuming such a method exists)
+        const totalTransactions = await contract.methods.getTotalTransactions().call();
+
+        // Fetch total tokens minted (if applicable)
+        const totalTokensMinted = await contract.methods.getTotalTokensMinted().call();
+
+        return {
+            totalUsers: totalUsers,
+            totalTransactions: totalTransactions,
+            totalTokensMinted: totalTokensMinted,
+        };
+    } catch (err) {
+        console.error("Error fetching analytics data:", err);
+        return null;
+    }
+}
+
+// Example usage
+const contractAddress = '0xYourSmartContractAddress';
+const abi = [ /* Your Contract ABI */ ];
+const providerUrl = 'https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID';
+
+fetchDAppAnalytics(contractAddress, abi, providerUrl)
+    .then(data => {
+        console.log('DApp Analytics Data:', data);
+    })
+    .catch(err => {
+        console.error('Error:', err);
+    });
+
